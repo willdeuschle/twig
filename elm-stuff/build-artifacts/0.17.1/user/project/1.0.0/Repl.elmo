@@ -1,0 +1,23 @@
+var _user$project$Repl$test = function (thing) {
+	return A2(
+		F2(
+			function (x, y) {
+				return A2(_elm_lang$core$List_ops['::'], x, y);
+			}),
+		'lala',
+		thing);
+};
+var _user$project$Repl$t_s_o_l = {ctor: '_Tuple0'};
+var _user$project$Repl$othertest = function (thing) {
+	return A2(
+		F2(
+			function (x, y) {
+				return A2(_elm_lang$core$Basics_ops['++'], x, y);
+			}),
+		_elm_lang$core$Native_List.fromArray(
+			['lala']),
+		thing);
+};
+var _user$project$Repl$foo = _elm_lang$core$Native_List.fromArray(
+	['buh', 'mum']);
+var _user$project$Repl$d_e_l_t_r_o_n_3_0_3_0 = _user$project$Repl$foo;
