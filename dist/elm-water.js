@@ -8009,13 +8009,6 @@ var _user$project$Simplify$genSentenceList = function (str) {
 	return _user$project$Simplify$restoreSentences(
 		A2(_elm_lang$core$String$split, '.', str));
 };
-var _user$project$Simplify$simplify = function (str) {
-	return A2(
-		_elm_lang$core$Maybe$withDefault,
-		'',
-		_elm_lang$core$List$head(
-			_user$project$Simplify$genSentenceList(str)));
-};
 var _user$project$Simplify$selectImportantWords = F2(
 	function (lst, num) {
 		var abbrevLst = A2(_elm_lang$core$List$take, num, lst);
@@ -8114,6 +8107,9 @@ var _user$project$Simplify$genGoodSentenceList = function (str) {
 			5),
 		sentLst);
 };
+var _user$project$Simplify$simplify = function (str) {
+	return _user$project$Simplify$genGoodSentenceList(str);
+};
 
 var _user$project$App$update = F2(
 	function (msg, model) {
@@ -8197,26 +8193,6 @@ var _user$project$App$view = function (model) {
 					[]),
 				_elm_lang$core$Native_List.fromArray(
 					[])),
-				A2(
-				_elm_lang$html$Html$div,
-				_elm_lang$core$Native_List.fromArray(
-					[]),
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html$text(
-						_elm_lang$core$Basics$toString(
-							_user$project$Simplify$genGoodSentenceList(model.text)))
-					])),
-				A2(
-				_elm_lang$html$Html$div,
-				_elm_lang$core$Native_List.fromArray(
-					[]),
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html$text(
-						_elm_lang$core$Basics$toString(
-							_user$project$Simplify$genSentenceList(model.text)))
-					])),
 				A2(
 				_elm_lang$html$Html$div,
 				_elm_lang$core$Native_List.fromArray(

@@ -206,4 +206,4 @@ genGoodSentenceList str =
 
 simplify : String -> String
 simplify str =
-    Maybe.withDefault "" (head (genSentenceList str))
+    genGoodSentenceList str

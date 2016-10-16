@@ -60,12 +60,6 @@ view model =
             ]
         , hr [] []
         , div []
-            [ text (toString (genGoodSentenceList model.text))
-            ]
-        , div []
-            [ text (toString (genSentenceList model.text))
-            ]
-        , div []
             [ text model.simplifiedText ]
         ]
 

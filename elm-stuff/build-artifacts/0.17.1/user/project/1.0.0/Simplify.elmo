@@ -110,13 +110,6 @@ var _user$project$Simplify$genSentenceList = function (str) {
 	return _user$project$Simplify$restoreSentences(
 		A2(_elm_lang$core$String$split, '.', str));
 };
-var _user$project$Simplify$simplify = function (str) {
-	return A2(
-		_elm_lang$core$Maybe$withDefault,
-		'',
-		_elm_lang$core$List$head(
-			_user$project$Simplify$genSentenceList(str)));
-};
 var _user$project$Simplify$selectImportantWords = F2(
 	function (lst, num) {
 		var abbrevLst = A2(_elm_lang$core$List$take, num, lst);
@@ -214,4 +207,7 @@ var _user$project$Simplify$genGoodSentenceList = function (str) {
 				_user$project$Simplify$genWordCountList(str)),
 			5),
 		sentLst);
+};
+var _user$project$Simplify$simplify = function (str) {
+	return _user$project$Simplify$genGoodSentenceList(str);
 };
