@@ -7947,7 +7947,7 @@ var _user$project$Simplify$selectGoodSentenceIds = F2(
 	});
 var _user$project$Simplify$countSentenceScore = F2(
 	function (lst, sent) {
-		return A3(
+		var raw_score = A3(
 			_elm_lang$core$List$foldl,
 			function (word) {
 				var numHits = A2(
@@ -7962,6 +7962,8 @@ var _user$project$Simplify$countSentenceScore = F2(
 			},
 			0,
 			lst);
+		return (raw_score / _elm_lang$core$List$length(
+			_elm_lang$core$String$words(sent))) | 0;
 	});
 var _user$project$Simplify$annotateSentences = F2(
 	function (sent_lst, word_lst) {
@@ -8009,17 +8011,31 @@ var _user$project$Simplify$genSentenceList = function (str) {
 	return _user$project$Simplify$restoreSentences(
 		A2(_elm_lang$core$String$split, '.', str));
 };
+var _user$project$Simplify$removeSmallWords = function (lst) {
+	return A2(
+		_elm_lang$core$List$filter,
+		function (_p8) {
+			var _p9 = _p8;
+			return _elm_lang$core$Native_Utils.cmp(
+				_elm_lang$core$String$length(_p9._0),
+				4) > 0;
+		},
+		lst);
+};
 var _user$project$Simplify$selectImportantWords = F2(
 	function (lst, num) {
-		var abbrevLst = A2(_elm_lang$core$List$take, num, lst);
+		var abbrevLst = A2(
+			_elm_lang$core$List$take,
+			num,
+			_user$project$Simplify$removeSmallWords(lst));
 		return A3(
 			_elm_lang$core$List$foldl,
-			function (_p8) {
-				var _p9 = _p8;
+			function (_p10) {
+				var _p11 = _p10;
 				return F2(
 					function (x, y) {
 						return A2(_elm_lang$core$List_ops['::'], x, y);
-					})(_p9._0);
+					})(_p11._0);
 			},
 			_elm_lang$core$Native_List.fromArray(
 				[]),
@@ -8029,20 +8045,20 @@ var _user$project$Simplify$dictToOrderedList = function (dict) {
 	return _elm_lang$core$List$reverse(
 		A2(
 			_elm_lang$core$List$sortBy,
-			function (_p10) {
-				var _p11 = _p10;
-				return _p11._1;
+			function (_p12) {
+				var _p13 = _p12;
+				return _p13._1;
 			},
 			_elm_lang$core$Dict$toList(dict)));
 };
 var _user$project$Simplify$addItem = F2(
 	function (str, dict) {
-		var _p12 = A2(_elm_lang$core$Dict$get, str, dict);
-		if (_p12.ctor === 'Just') {
+		var _p14 = A2(_elm_lang$core$Dict$get, str, dict);
+		if (_p14.ctor === 'Just') {
 			return A3(
 				_elm_lang$core$Dict$insert,
 				_elm_lang$core$String$toLower(str),
-				_p12._0 + 1,
+				_p14._0 + 1,
 				dict);
 		} else {
 			return A3(

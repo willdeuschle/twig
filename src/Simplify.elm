@@ -69,6 +69,15 @@ dictToOrderedList dict =
 
 
 
+-- remove small words so we don't track 'it's, 'I's, etc
+
+
+removeSmallWords : List ( String, Int ) -> List ( String, Int )
+removeSmallWords lst =
+    List.filter (\( str, hits ) -> (String.length str) > 4) lst
+
+
+
 -- decide how many of the important words we care about, collapse the dict to just a list of those word
 
 
@@ -76,7 +85,7 @@ selectImportantWords : List ( String, Int ) -> Int -> List String
 selectImportantWords lst num =
     let
         abbrevLst =
-            List.take num lst
+            List.take num (removeSmallWords lst)
     in
         List.foldl (\( str, num ) -> ((::) str)) [] abbrevLst
 
@@ -129,16 +138,20 @@ restoreSentences lst =
 
 countSentenceScore : List String -> String -> Int
 countSentenceScore lst sent =
-    List.foldl
-        (\word ->
-            let
-                numHits =
-                    String.indices word (String.toLower sent)
-            in
-                (+) (List.length numHits)
-        )
-        0
-        lst
+    let
+        raw_score =
+            List.foldl
+                (\word ->
+                    let
+                        numHits =
+                            String.indices word (String.toLower sent)
+                    in
+                        (+) (List.length numHits)
+                )
+                0
+                lst
+    in
+        raw_score // List.length (String.words sent)
 
 
 
