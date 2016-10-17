@@ -60,6 +60,7 @@ genWordDictionary str =
 
 -- END OF THE DICT GENERATION --
 -- BEGIN CONVERSION FROM THAT SCORE DICT TO A LIST OF IMPORTANT WORDS --
+-- convert dictionary to list of tuples, sort it, then reverse so it is a high to low score ordering
 
 
 dictToOrderedList : Dict String Int -> List ( String, Int )
@@ -92,7 +93,7 @@ genWordCountList str =
 
 -- END CONVERSION FROM SCORE DICT TO IMPORTANT LIST OF WORDS --
 -- BEGIN CONVERSION FROM TEXT TO LIST OF SENTENCES --
--- should think through this a little more later on
+-- should think through this a little more later on, currently just splitting on periods
 
 
 genSentenceList : String -> List String
@@ -165,6 +166,10 @@ selectGoodSentenceIds dict num =
         List.foldl (\( idx, hits ) -> ((::) idx)) [] truncatedSents
 
 
+
+-- takes list of sentence indices and the list of strings and creates the new text output
+
+
 attachSentencesFromIds : List Int -> List String -> String
 attachSentencesFromIds id_lst str_lst =
     let
@@ -185,13 +190,11 @@ attachSentencesFromIds id_lst str_lst =
 
 
 -- create the dict of sentence scores by generating our sentence list and our list of best words
--- still unordered and not selected for the top ones
+-- calculate word scores, get sentence list, choose length of simplification, and construct the new text
 
 
 genGoodSentenceList : String -> String
 genGoodSentenceList str =
-    --selectGoodSentenceIds (annotateSentences (genSentenceList str) (genWordCountList str)) 5
-    --annotateSentences (genSentenceList str) (genWordCountList str)
     let
         sentLst =
             genSentenceList str
