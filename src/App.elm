@@ -49,7 +49,7 @@ update msg model =
             ( { model | url = url }, Cmd.none )
 
         GetArticle ->
-            ( model, getArticle model.url )
+            ( { model | title = "Loading...", simplifiedText = "" }, getArticle model.url )
 
         ArticleReceived articlePayload ->
             ( { model | title = articlePayload.title, simplifiedText = (simplify articlePayload.article) }, Cmd.none )
