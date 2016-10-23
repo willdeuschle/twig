@@ -20,9 +20,14 @@
         xhrFields: {withCredentials: false},
         success: function(response) {
           console.log("Success", response);
-          app.ports.articleReceived.send({title: response.title, article: response.article});
+          var title = (response.title || "Sorry");
+          var article = (response.article || "This article is currently non-functional.");
+          app.ports.articleReceived.send({title: title, article: article});
         },
-        error: function(err) {console.log("Error", err);},
+        error: function(err) {
+          console.log("Error", err);
+          app.ports.articleStatus.send(false);
+        },
       });
     });
     </script>

@@ -40,6 +40,7 @@ type Msg
     = UpdateUrl String
     | GetArticle
     | ArticleReceived { article : String, title : String }
+    | ArticleStatus Bool
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -54,6 +55,12 @@ update msg model =
         ArticleReceived articlePayload ->
             ( { model | title = articlePayload.title, simplifiedText = (simplify articlePayload.article) }, Cmd.none )
 
+        ArticleStatus status ->
+            if status then
+                ( model, Cmd.none )
+            else
+                ( { model | title = "Sorry, that url is currently non-functional." }, Cmd.none )
+
 
 
 -- VIEW
@@ -63,7 +70,7 @@ view : Model -> Html Msg
 view model =
     div [ class "top-level" ]
         [ div [ class "text-container" ]
-            [ textarea
+            [ input
                 [ placeholder "Enter the passage here..."
                 , onInput UpdateUrl
                 , value model.url
@@ -92,6 +99,7 @@ subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
         [ articleReceived ArticleReceived
+        , articleStatus ArticleStatus
         ]
 
 
@@ -99,6 +107,9 @@ port getArticle : String -> Cmd msg
 
 
 port articleReceived : (ArticlePayload -> msg) -> Sub msg
+
+
+port articleStatus : (Bool -> msg) -> Sub msg
 
 
 main : Program Never
