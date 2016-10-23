@@ -3,6 +3,7 @@
 <head>
     <title>Text Simplification</title>
     <script type="text/javascript" src='elm-water.js'></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -10,6 +11,9 @@
     <script type="text/javascript">
         var node = document.getElementById('elm-root');
         var app = Elm.App.embed(node);
+    </script>
+    <script type="text/javascript">
+        console.log("foobar", jQuery);
     </script>
 </body>
 </html>
