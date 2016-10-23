@@ -35,7 +35,6 @@ init =
 type Msg
     = UpdateUrl String
     | GetArticle
-    | EvaluateTest
     | ArticleReceived String
 
 
@@ -47,9 +46,6 @@ update msg model =
 
         GetArticle ->
             ( model, getArticle model.text )
-
-        EvaluateTest ->
-            ( { model | simplifiedText = (simplify model.text) }, Cmd.none )
 
         ArticleReceived article ->
             ( { model | simplifiedText = (simplify article) }, Cmd.none )
@@ -74,7 +70,6 @@ view model =
         , hr [] []
         , div []
             [ button [ onClick GetArticle ] [ text "Simplify" ]
-            , button [ onClick EvaluateTest ] [ text "Test" ]
             ]
         , hr [] []
         , div []
