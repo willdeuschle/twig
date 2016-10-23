@@ -69,25 +69,32 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div [ class "top-level" ]
-        [ div [ class "text-container" ]
-            [ input
-                [ placeholder "Enter the passage here..."
-                , onInput UpdateUrl
-                , value model.url
-                , class "to-simplify"
+        [ div [ class "header-bar" ]
+            [ h1 [] [ text "Medium Simplifier" ]
+            ]
+        , div [ class "main-container" ]
+            [ div [ class "url-container" ]
+                [ input
+                    [ placeholder "Enter the Medium article url here..."
+                    , onInput UpdateUrl
+                    , value model.url
+                    , class "to-simplify"
+                    ]
+                    []
                 ]
-                []
+            , br [] []
+            , div [ class "button-container" ]
+                [ button [ onClick GetArticle ] [ text "Simplify" ]
+                ]
+            , br [] []
+            , div [ class "article-container" ]
+                [ h2 []
+                    [ text model.title ]
+                , br [] []
+                , div [ class "article-text" ]
+                    [ text model.simplifiedText ]
+                ]
             ]
-        , hr [] []
-        , div []
-            [ button [ onClick GetArticle ] [ text "Simplify" ]
-            ]
-        , hr [] []
-        , h2 []
-            [ text model.title ]
-        , hr [] []
-        , div []
-            [ text model.simplifiedText ]
         ]
 
 
