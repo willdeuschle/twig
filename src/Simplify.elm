@@ -134,10 +134,12 @@ restoreSentences lst =
 -- END CONVERSION FROM TEXT TO LIST OF SENTENCES --
 -- BEGIN CONVERSION FROM WORD SCORE DICT AND SENTENCE LIST TO A FINALIZED SENTENCE LIST --
 -- calculate a score for each sentence based on our word score
+-- will hopefully eventually transition to this sentence scoring that is also
+-- based on sentence length
 
 
-countSentenceScore : List String -> String -> Int
-countSentenceScore lst sent =
+eventualCountSentenceScore : List String -> String -> Int
+eventualCountSentenceScore lst sent =
     let
         raw_score =
             List.foldl
@@ -155,7 +157,25 @@ countSentenceScore lst sent =
 
 
 
--- create a dict that has a score for every sentence (keyed on the sentence)
+-- satisfied with this sentence scoring for now
+
+
+countSentenceScore : List String -> String -> Int
+countSentenceScore lst sent =
+    List.foldl
+        (\word ->
+            let
+                numHits =
+                    String.indices word (String.toLower sent)
+            in
+                (+) (List.length numHits)
+        )
+        0
+        lst
+
+
+
+--create a dict that has a score for every sentence (keyed on the sentence)
 
 
 annotateSentences : List String -> List String -> Dict Int Int

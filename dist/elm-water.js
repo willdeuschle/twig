@@ -7947,6 +7947,39 @@ var _user$project$Simplify$selectGoodSentenceIds = F2(
 	});
 var _user$project$Simplify$countSentenceScore = F2(
 	function (lst, sent) {
+		return A3(
+			_elm_lang$core$List$foldl,
+			function (word) {
+				var numHits = A2(
+					_elm_lang$core$String$indices,
+					word,
+					_elm_lang$core$String$toLower(sent));
+				return F2(
+					function (x, y) {
+						return x + y;
+					})(
+					_elm_lang$core$List$length(numHits));
+			},
+			0,
+			lst);
+	});
+var _user$project$Simplify$annotateSentences = F2(
+	function (sent_lst, word_lst) {
+		return A3(
+			_elm_lang$core$List$foldl,
+			function (_p4) {
+				var _p5 = _p4;
+				return A2(
+					_elm_lang$core$Dict$insert,
+					_p5._0,
+					A2(_user$project$Simplify$countSentenceScore, word_lst, _p5._1));
+			},
+			_elm_lang$core$Dict$empty,
+			_elm_lang$core$Array$toIndexedList(
+				_elm_lang$core$Array$fromList(sent_lst)));
+	});
+var _user$project$Simplify$eventualCountSentenceScore = F2(
+	function (lst, sent) {
 		var raw_score = A3(
 			_elm_lang$core$List$foldl,
 			function (word) {
@@ -7964,21 +7997,6 @@ var _user$project$Simplify$countSentenceScore = F2(
 			lst);
 		return (raw_score / _elm_lang$core$List$length(
 			_elm_lang$core$String$words(sent))) | 0;
-	});
-var _user$project$Simplify$annotateSentences = F2(
-	function (sent_lst, word_lst) {
-		return A3(
-			_elm_lang$core$List$foldl,
-			function (_p4) {
-				var _p5 = _p4;
-				return A2(
-					_elm_lang$core$Dict$insert,
-					_p5._0,
-					A2(_user$project$Simplify$countSentenceScore, word_lst, _p5._1));
-			},
-			_elm_lang$core$Dict$empty,
-			_elm_lang$core$Array$toIndexedList(
-				_elm_lang$core$Array$fromList(sent_lst)));
 	});
 var _user$project$Simplify$restoreSentences = function (lst) {
 	var _p6 = lst;
@@ -8127,29 +8145,72 @@ var _user$project$Simplify$simplify = function (str) {
 	return _user$project$Simplify$genGoodSentenceList(str);
 };
 
+var _user$project$App$initModel = {text: '', simplifiedText: ''};
+var _user$project$App$init = {ctor: '_Tuple2', _0: _user$project$App$initModel, _1: _elm_lang$core$Platform_Cmd$none};
+var _user$project$App$getArticle = _elm_lang$core$Native_Platform.outgoingPort(
+	'getArticle',
+	function (v) {
+		return v;
+	});
 var _user$project$App$update = F2(
 	function (msg, model) {
 		var _p0 = msg;
-		if (_p0.ctor === 'UpdateText') {
-			return _elm_lang$core$Native_Utils.update(
-				model,
-				{text: _p0._0});
-		} else {
-			return _elm_lang$core$Native_Utils.update(
-				model,
-				{
-					simplifiedText: _user$project$Simplify$simplify(model.text)
-				});
+		switch (_p0.ctor) {
+			case 'UpdateUrl':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{text: _p0._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'GetArticle':
+				return {
+					ctor: '_Tuple2',
+					_0: model,
+					_1: _user$project$App$getArticle(model.text)
+				};
+			case 'EvaluateTest':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							simplifiedText: _user$project$Simplify$simplify(model.text)
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			default:
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							simplifiedText: _user$project$Simplify$simplify(_p0._0)
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
 		}
 	});
-var _user$project$App$initModel = {text: '', simplifiedText: ''};
+var _user$project$App$articleReceived = _elm_lang$core$Native_Platform.incomingPort('articleReceived', _elm_lang$core$Json_Decode$string);
 var _user$project$App$Model = F2(
 	function (a, b) {
 		return {text: a, simplifiedText: b};
 	});
-var _user$project$App$Evaluate = {ctor: 'Evaluate'};
-var _user$project$App$UpdateText = function (a) {
-	return {ctor: 'UpdateText', _0: a};
+var _user$project$App$ArticleReceived = function (a) {
+	return {ctor: 'ArticleReceived', _0: a};
+};
+var _user$project$App$subscriptions = function (model) {
+	return _elm_lang$core$Platform_Sub$batch(
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_user$project$App$articleReceived(_user$project$App$ArticleReceived)
+			]));
+};
+var _user$project$App$EvaluateTest = {ctor: 'EvaluateTest'};
+var _user$project$App$GetArticle = {ctor: 'GetArticle'};
+var _user$project$App$UpdateUrl = function (a) {
+	return {ctor: 'UpdateUrl', _0: a};
 };
 var _user$project$App$view = function (model) {
 	return A2(
@@ -8173,7 +8234,7 @@ var _user$project$App$view = function (model) {
 						_elm_lang$core$Native_List.fromArray(
 							[
 								_elm_lang$html$Html_Attributes$placeholder('Enter the passage here...'),
-								_elm_lang$html$Html_Events$onInput(_user$project$App$UpdateText),
+								_elm_lang$html$Html_Events$onInput(_user$project$App$UpdateUrl),
 								_elm_lang$html$Html_Attributes$value(model.text),
 								_elm_lang$html$Html_Attributes$class('to-simplify')
 							]),
@@ -8196,11 +8257,21 @@ var _user$project$App$view = function (model) {
 						_elm_lang$html$Html$button,
 						_elm_lang$core$Native_List.fromArray(
 							[
-								_elm_lang$html$Html_Events$onClick(_user$project$App$Evaluate)
+								_elm_lang$html$Html_Events$onClick(_user$project$App$GetArticle)
 							]),
 						_elm_lang$core$Native_List.fromArray(
 							[
-								_elm_lang$html$Html$text('Evaluate')
+								_elm_lang$html$Html$text('Simplify')
+							])),
+						A2(
+						_elm_lang$html$Html$button,
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html_Events$onClick(_user$project$App$EvaluateTest)
+							]),
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html$text('Test')
 							]))
 					])),
 				A2(
@@ -8220,8 +8291,8 @@ var _user$project$App$view = function (model) {
 			]));
 };
 var _user$project$App$main = {
-	main: _elm_lang$html$Html_App$beginnerProgram(
-		{model: _user$project$App$initModel, update: _user$project$App$update, view: _user$project$App$view})
+	main: _elm_lang$html$Html_App$program(
+		{init: _user$project$App$init, update: _user$project$App$update, view: _user$project$App$view, subscriptions: _user$project$App$subscriptions})
 };
 
 var Elm = {};

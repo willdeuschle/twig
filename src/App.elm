@@ -1,4 +1,4 @@
-module App exposing (..)
+port module App exposing (..)
 
 import Simplify exposing (..)
 import Html exposing (..)
@@ -14,9 +14,18 @@ type alias Model =
     { text : String, simplifiedText : String }
 
 
+
+-- leaving the init verbose for clarity
+
+
 initModel : Model
 initModel =
     { text = "", simplifiedText = "" }
+
+
+init : ( Model, Cmd Msg )
+init =
+    ( initModel, Cmd.none )
 
 
 
@@ -24,18 +33,26 @@ initModel =
 
 
 type Msg
-    = UpdateText String
-    | Evaluate
+    = UpdateUrl String
+    | GetArticle
+    | EvaluateTest
+    | ArticleReceived String
 
 
-update : Msg -> Model -> Model
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        UpdateText text ->
-            { model | text = text }
+        UpdateUrl text ->
+            ( { model | text = text }, Cmd.none )
 
-        Evaluate ->
-            { model | simplifiedText = (simplify model.text) }
+        GetArticle ->
+            ( model, getArticle model.text )
+
+        EvaluateTest ->
+            ( { model | simplifiedText = (simplify model.text) }, Cmd.none )
+
+        ArticleReceived article ->
+            ( { model | simplifiedText = (simplify article) }, Cmd.none )
 
 
 
@@ -48,7 +65,7 @@ view model =
         [ div [ class "text-container" ]
             [ textarea
                 [ placeholder "Enter the passage here..."
-                , onInput UpdateText
+                , onInput UpdateUrl
                 , value model.text
                 , class "to-simplify"
                 ]
@@ -56,7 +73,8 @@ view model =
             ]
         , hr [] []
         , div []
-            [ button [ onClick Evaluate ] [ text "Evaluate" ]
+            [ button [ onClick GetArticle ] [ text "Simplify" ]
+            , button [ onClick EvaluateTest ] [ text "Test" ]
             ]
         , hr [] []
         , div []
@@ -64,10 +82,28 @@ view model =
         ]
 
 
+
+-- subscriptions
+
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Sub.batch
+        [ articleReceived ArticleReceived
+        ]
+
+
+port getArticle : String -> Cmd msg
+
+
+port articleReceived : (String -> msg) -> Sub msg
+
+
 main : Program Never
 main =
-    App.beginnerProgram
-        { model = initModel
+    App.program
+        { init = init
         , update = update
         , view = view
+        , subscriptions = subscriptions
         }

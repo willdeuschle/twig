@@ -1,19 +1,31 @@
 <!doctype html>
 <html>
 <head>
-    <title>Text Simplification</title>
-    <script type="text/javascript" src='elm-water.js'></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <link rel="stylesheet" href="style.css">
+  <title>Text Simplification</title>
+  <script type="text/javascript" src='elm-water.js'></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id='elm-root'></div>
-    <script type="text/javascript">
-        var node = document.getElementById('elm-root');
-        var app = Elm.App.embed(node);
-    </script>
-    <script type="text/javascript">
-        console.log("foobar", jQuery);
+  <div id='elm-root'></div>
+  <script type="text/javascript">
+    var node = document.getElementById('elm-root');
+    var app = Elm.App.embed(node);
+    app.ports.getArticle.subscribe(function(url) {
+      console.log("Getting url: ", url);
+      $.ajax({
+        type: 'GET',
+        url: ('http://localhost:8000?' + url),
+        contentType: 'application/json',
+        xhrFields: {withCredentials: false},
+        success: function(response) {
+          console.log("Success", response);
+          app.ports.articleReceived.send(response.article_body);
+        },
+        error: function(err) {console.log("Error", err);},
+      });
+    });
     </script>
 </body>
 </html>
+<!--url: "http://api.icndb.com/jokes/random",-->

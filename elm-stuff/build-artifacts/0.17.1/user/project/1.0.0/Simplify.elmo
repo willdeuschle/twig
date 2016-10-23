@@ -48,6 +48,39 @@ var _user$project$Simplify$selectGoodSentenceIds = F2(
 	});
 var _user$project$Simplify$countSentenceScore = F2(
 	function (lst, sent) {
+		return A3(
+			_elm_lang$core$List$foldl,
+			function (word) {
+				var numHits = A2(
+					_elm_lang$core$String$indices,
+					word,
+					_elm_lang$core$String$toLower(sent));
+				return F2(
+					function (x, y) {
+						return x + y;
+					})(
+					_elm_lang$core$List$length(numHits));
+			},
+			0,
+			lst);
+	});
+var _user$project$Simplify$annotateSentences = F2(
+	function (sent_lst, word_lst) {
+		return A3(
+			_elm_lang$core$List$foldl,
+			function (_p4) {
+				var _p5 = _p4;
+				return A2(
+					_elm_lang$core$Dict$insert,
+					_p5._0,
+					A2(_user$project$Simplify$countSentenceScore, word_lst, _p5._1));
+			},
+			_elm_lang$core$Dict$empty,
+			_elm_lang$core$Array$toIndexedList(
+				_elm_lang$core$Array$fromList(sent_lst)));
+	});
+var _user$project$Simplify$eventualCountSentenceScore = F2(
+	function (lst, sent) {
 		var raw_score = A3(
 			_elm_lang$core$List$foldl,
 			function (word) {
@@ -65,21 +98,6 @@ var _user$project$Simplify$countSentenceScore = F2(
 			lst);
 		return (raw_score / _elm_lang$core$List$length(
 			_elm_lang$core$String$words(sent))) | 0;
-	});
-var _user$project$Simplify$annotateSentences = F2(
-	function (sent_lst, word_lst) {
-		return A3(
-			_elm_lang$core$List$foldl,
-			function (_p4) {
-				var _p5 = _p4;
-				return A2(
-					_elm_lang$core$Dict$insert,
-					_p5._0,
-					A2(_user$project$Simplify$countSentenceScore, word_lst, _p5._1));
-			},
-			_elm_lang$core$Dict$empty,
-			_elm_lang$core$Array$toIndexedList(
-				_elm_lang$core$Array$fromList(sent_lst)));
 	});
 var _user$project$Simplify$restoreSentences = function (lst) {
 	var _p6 = lst;
