@@ -20,7 +20,7 @@
         xhrFields: {withCredentials: false},
         success: function(response) {
           console.log("Success", response);
-          app.ports.articleReceived.send(response.article_body);
+          app.ports.articleReceived.send({title: response.title, article: response.article});
         },
         error: function(err) {console.log("Error", err);},
       });

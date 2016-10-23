@@ -11,7 +11,7 @@ import Html.App as App
 
 
 type alias Model =
-    { text : String, simplifiedText : String }
+    { url : String, simplifiedText : String, title : String }
 
 
 
@@ -20,12 +20,16 @@ type alias Model =
 
 initModel : Model
 initModel =
-    { text = "", simplifiedText = "" }
+    { url = "", simplifiedText = "", title = "" }
 
 
 init : ( Model, Cmd Msg )
 init =
     ( initModel, Cmd.none )
+
+
+type alias ArticlePayload =
+    { title : String, article : String }
 
 
 
@@ -35,20 +39,20 @@ init =
 type Msg
     = UpdateUrl String
     | GetArticle
-    | ArticleReceived String
+    | ArticleReceived { article : String, title : String }
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        UpdateUrl text ->
-            ( { model | text = text }, Cmd.none )
+        UpdateUrl url ->
+            ( { model | url = url }, Cmd.none )
 
         GetArticle ->
-            ( model, getArticle model.text )
+            ( model, getArticle model.url )
 
-        ArticleReceived article ->
-            ( { model | simplifiedText = (simplify article) }, Cmd.none )
+        ArticleReceived articlePayload ->
+            ( { model | title = articlePayload.title, simplifiedText = (simplify articlePayload.article) }, Cmd.none )
 
 
 
@@ -62,7 +66,7 @@ view model =
             [ textarea
                 [ placeholder "Enter the passage here..."
                 , onInput UpdateUrl
-                , value model.text
+                , value model.url
                 , class "to-simplify"
                 ]
                 []
@@ -71,6 +75,9 @@ view model =
         , div []
             [ button [ onClick GetArticle ] [ text "Simplify" ]
             ]
+        , hr [] []
+        , h2 []
+            [ text model.title ]
         , hr [] []
         , div []
             [ text model.simplifiedText ]
@@ -91,7 +98,7 @@ subscriptions model =
 port getArticle : String -> Cmd msg
 
 
-port articleReceived : (String -> msg) -> Sub msg
+port articleReceived : (ArticlePayload -> msg) -> Sub msg
 
 
 main : Program Never
