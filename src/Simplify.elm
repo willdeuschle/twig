@@ -133,13 +133,11 @@ restoreSentences lst =
 
 -- END CONVERSION FROM TEXT TO LIST OF SENTENCES --
 -- BEGIN CONVERSION FROM WORD SCORE DICT AND SENTENCE LIST TO A FINALIZED SENTENCE LIST --
--- calculate a score for each sentence based on our word score
--- will hopefully eventually transition to this sentence scoring that is also
--- based on sentence length
+-- calculate a score for each sentence based on our word score and sentence length
 
 
-eventualCountSentenceScore : List String -> String -> Int
-eventualCountSentenceScore lst sent =
+countSentenceScore : List String -> String -> Float
+countSentenceScore lst sent =
     let
         raw_score =
             List.foldl
@@ -153,32 +151,14 @@ eventualCountSentenceScore lst sent =
                 0
                 lst
     in
-        raw_score // List.length (String.words sent)
-
-
-
--- satisfied with this sentence scoring for now
-
-
-countSentenceScore : List String -> String -> Int
-countSentenceScore lst sent =
-    List.foldl
-        (\word ->
-            let
-                numHits =
-                    String.indices word (String.toLower sent)
-            in
-                (+) (List.length numHits)
-        )
-        0
-        lst
+        (toFloat raw_score) / toFloat (1 * List.length (String.words sent))
 
 
 
 --create a dict that has a score for every sentence (keyed on the sentence)
 
 
-annotateSentences : List String -> List String -> Dict Int Int
+annotateSentences : List String -> List String -> Dict Int Float
 annotateSentences sent_lst word_lst =
     List.foldl (\( idx, sent ) -> Dict.insert idx (countSentenceScore word_lst sent)) Dict.empty (Array.toIndexedList (Array.fromList sent_lst))
 
@@ -187,7 +167,7 @@ annotateSentences sent_lst word_lst =
 -- choose the top x best sentences from our dict of sentences with scores, provide a list of sentence ids, (reverse in there so we go high to low)
 
 
-selectGoodSentenceIds : Dict Int Int -> Int -> List Int
+selectGoodSentenceIds : Dict Int Float -> Int -> List Int
 selectGoodSentenceIds dict num =
     let
         organizedSents =
