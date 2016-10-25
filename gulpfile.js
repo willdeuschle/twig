@@ -5,7 +5,7 @@ var exec = require('child_process').exec;
 var gutil = require('gulp-util');
 
 
-var cmd = 'elm-make src/App.elm --output dist/elm-water.js';
+var cmd = 'elm make --output dist/elm-water.js src/App.elm';
 
 gulp.task('default', ['elm']);
 
