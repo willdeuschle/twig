@@ -53,7 +53,7 @@ update msg model =
             ( { model | title = "Loading...", simplifiedText = "" }, getArticle model.url )
 
         ArticleReceived articlePayload ->
-            ( { model | title = articlePayload.title, simplifiedText = (simplify articlePayload.article) }, Cmd.none )
+            ( { model | title = articlePayload.title, simplifiedText = (simplify articlePayload.article articlePayload.title) }, Cmd.none )
 
         ArticleStatus status ->
             if status then

@@ -133,34 +133,46 @@ restoreSentences lst =
 
 -- END CONVERSION FROM TEXT TO LIST OF SENTENCES --
 -- BEGIN CONVERSION FROM WORD SCORE DICT AND SENTENCE LIST TO A FINALIZED SENTENCE LIST --
--- calculate a score for each sentence based on our word score and sentence length
+-- abstract functionality that calculates the score for titles and sentences
 
 
-countSentenceScore : List String -> String -> Float
-countSentenceScore lst sent =
+genHits : List String -> String -> Int
+genHits word_list str =
+    List.foldl
+        (\word ->
+            let
+                numHits =
+                    String.indices word (String.toLower str)
+            in
+                (+) (List.length numHits)
+        )
+        0
+        word_list
+
+
+
+-- calculate a score for each sentence based on our word score, sentence length, and title boost
+
+
+countSentenceScore : List String -> String -> String -> Float
+countSentenceScore lst sent title =
     let
         raw_score =
-            List.foldl
-                (\word ->
-                    let
-                        numHits =
-                            String.indices word (String.toLower sent)
-                    in
-                        (+) (List.length numHits)
-                )
-                0
-                lst
+            genHits lst sent
+
+        title_boost =
+            2 * (genHits (String.words title) sent)
     in
-        (toFloat raw_score) / toFloat (1 * List.length (String.words sent))
+        (toFloat (raw_score + title_boost)) / toFloat (1 * List.length (String.words sent))
 
 
 
 --create a dict that has a score for every sentence (keyed on the sentence)
 
 
-annotateSentences : List String -> List String -> Dict Int Float
-annotateSentences sent_lst word_lst =
-    List.foldl (\( idx, sent ) -> Dict.insert idx (countSentenceScore word_lst sent)) Dict.empty (Array.toIndexedList (Array.fromList sent_lst))
+annotateSentences : List String -> List String -> String -> Dict Int Float
+annotateSentences sent_lst word_lst title =
+    List.foldl (\( idx, sent ) -> Dict.insert idx (countSentenceScore word_lst sent title)) Dict.empty (Array.toIndexedList (Array.fromList sent_lst))
 
 
 
@@ -206,13 +218,13 @@ attachSentencesFromIds id_lst str_lst =
 -- calculate word scores, get sentence list, choose length of simplification, and construct the new text
 
 
-genGoodSentenceList : String -> String
-genGoodSentenceList str =
+genGoodSentenceList : String -> String -> String
+genGoodSentenceList str title =
     let
         sentLst =
             genSentenceList str
     in
-        attachSentencesFromIds (selectGoodSentenceIds (annotateSentences sentLst (genWordCountList str)) 5) sentLst
+        attachSentencesFromIds (selectGoodSentenceIds (annotateSentences sentLst (genWordCountList str) title) 5) sentLst
 
 
 
@@ -220,6 +232,6 @@ genGoodSentenceList str =
 -- EVENTUALLY USE THIS TO CALCULATE THE SIMPLIFICATION
 
 
-simplify : String -> String
-simplify str =
-    genGoodSentenceList str
+simplify : String -> String -> String
+simplify str title =
+    genGoodSentenceList str title
