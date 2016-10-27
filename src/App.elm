@@ -1,6 +1,7 @@
 port module App exposing (..)
 
-import Simplify exposing (..)
+import Simplify exposing (simplify)
+import Highlight exposing (highlight)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
@@ -11,7 +12,7 @@ import Html.App as App
 
 
 type alias Model =
-    { url : String, simplifiedText : String, title : String }
+    { url : String, simplifiedText : String, articleText : String, title : String }
 
 
 
@@ -20,7 +21,7 @@ type alias Model =
 
 initModel : Model
 initModel =
-    { url = "", simplifiedText = "", title = "" }
+    { url = "", simplifiedText = "", articleText = "", title = "" }
 
 
 init : ( Model, Cmd Msg )
@@ -53,7 +54,7 @@ update msg model =
             ( { model | title = "Loading...", simplifiedText = "" }, getArticle model.url )
 
         ArticleReceived articlePayload ->
-            ( { model | title = articlePayload.title, simplifiedText = (simplify articlePayload.article articlePayload.title) }, Cmd.none )
+            ( { model | title = articlePayload.title, simplifiedText = (simplify articlePayload.article articlePayload.title), articleText = articlePayload.article }, Cmd.none )
 
         ArticleStatus status ->
             if status then
@@ -91,8 +92,9 @@ view model =
                 [ h2 []
                     [ text model.title ]
                 , br [] []
-                , div [ class "article-text" ]
+                , div [ class "simplified-text" ]
                     [ text model.simplifiedText ]
+                , highlight model.articleText model.title
                 ]
             ]
         ]

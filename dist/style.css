@@ -19,9 +19,17 @@ body {
 .article-container > h2 {
     text-align: center;
 }
+.article-container > .simplified-text {
+    margin-left: 30px;
+    margin-right: 30px;
+    width: 40%;
+    float: left;
+}
 .article-container > .article-text {
     margin-left: 30px;
     margin-right: 30px;
+    width: 40%;
+    float: right;
 }
 .to-simplify {
     width: 300px;

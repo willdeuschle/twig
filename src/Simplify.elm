@@ -1,4 +1,4 @@
-module Simplify exposing (simplify, genGoodSentenceList, genSentenceList)
+module Simplify exposing (simplify, genGoodSentenceIds, genSentenceList)
 
 import List exposing (head)
 import String exposing (split, indices, trim, slice)
@@ -214,6 +214,19 @@ attachSentencesFromIds id_lst str_lst =
 
 
 
+-- factor this out so it can be used elsewhere
+
+
+genGoodSentenceIds : String -> String -> List Int
+genGoodSentenceIds str title =
+    let
+        sentLst =
+            genSentenceList str
+    in
+        selectGoodSentenceIds (annotateSentences sentLst (genWordCountList str) title) 5
+
+
+
 -- create the dict of sentence scores by generating our sentence list and our list of best words
 -- calculate word scores, get sentence list, choose length of simplification, and construct the new text
 
@@ -224,7 +237,7 @@ genGoodSentenceList str title =
         sentLst =
             genSentenceList str
     in
-        attachSentencesFromIds (selectGoodSentenceIds (annotateSentences sentLst (genWordCountList str) title) 5) sentLst
+        attachSentencesFromIds (genGoodSentenceIds str title) sentLst
 
 
 
