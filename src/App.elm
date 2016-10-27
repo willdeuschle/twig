@@ -82,10 +82,7 @@ view model =
                     , class "to-simplify"
                     ]
                     []
-                ]
-            , br [] []
-            , div [ class "button-container" ]
-                [ button [ onClick GetArticle ] [ text "Simplify" ]
+                , button [ class "simplify-button", onClick GetArticle ] [ text "Simplify" ]
                 ]
             , br [] []
             , div [ class "article-container" ]

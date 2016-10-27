@@ -12,12 +12,14 @@ body {
     left: 0;
     right: 0;
     position: absolute;
+    margin-bottom: 20px;
 }
 .url-container {
     text-align: center;
 }
 .article-container > h2 {
     text-align: center;
+    margin: 5px 0px 5px 0px;
 }
 .article-container > .simplified-text {
     margin-left: 30px;
@@ -30,10 +32,34 @@ body {
     margin-right: 30px;
     width: 40%;
     float: right;
+    height: 75vh;
+    overflow: auto;
 }
 .to-simplify {
-    width: 300px;
-    height: 20px;
+    width: 450px;
+    height: 36px;
+    border-radius: 4px 0px 0px 4px;
+    border: 1px solid lightsteelblue;
+    border-right: 0px;
+    padding-left: 5px;
+    font-size: 20px
+}
+.to-simplify:focus {
+    outline: none;
+}
+.simplify-button {
+    height: 40px;
+    font-size: 20px;
+    border-radius: 0px 4px 4px 0px;
+    border: 1px solid lightsteelblue;
+    font-weight: 200;
+    background-color: lightsteelblue;
+}
+.simplify-button:hover {
+    cursor: pointer;
+}
+.simplify-button:focus {
+    outline: none;
 }
 .header-bar {
     height: 90px;

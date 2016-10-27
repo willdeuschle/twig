@@ -107,7 +107,7 @@ genWordCountList str =
 
 genSentenceList : String -> List String
 genSentenceList str =
-    restoreSentences (split "." str)
+    restoreSentences (split ". " str)
 
 
 
@@ -152,6 +152,9 @@ genHits word_list str =
 
 
 -- calculate a score for each sentence based on our word score, sentence length, and title boost
+-- this is the truly important function- everything else is just scaffolding arround this
+-- given the article and the title, you can calculate the most imporant sentences
+-- using whatever heuristics you deem fit
 
 
 countSentenceScore : List String -> String -> String -> Float
@@ -179,8 +182,8 @@ annotateSentences sent_lst word_lst title =
 -- choose the top x best sentences from our dict of sentences with scores, provide a list of sentence ids, (reverse in there so we go high to low)
 
 
-selectGoodSentenceIds : Dict Int Float -> Int -> List Int
-selectGoodSentenceIds dict num =
+parseGoodSentenceIds : Dict Int Float -> Int -> List Int
+parseGoodSentenceIds dict num =
     let
         organizedSents =
             List.reverse (List.sortBy (\( idx, hits ) -> hits) (Dict.toList dict))
@@ -223,7 +226,7 @@ genGoodSentenceIds str title =
         sentLst =
             genSentenceList str
     in
-        selectGoodSentenceIds (annotateSentences sentLst (genWordCountList str) title) 5
+        parseGoodSentenceIds (annotateSentences sentLst (genWordCountList str) title) 5
 
 
 
