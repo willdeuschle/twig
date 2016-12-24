@@ -1,5 +1,6 @@
 port module App exposing (..)
 
+import String exposing (isEmpty)
 import Simplify exposing (simplify)
 import Highlight exposing (highlight)
 import Html exposing (..)
@@ -67,6 +68,27 @@ update msg model =
 -- VIEW
 
 
+initialView : Model -> Html Msg
+initialView model =
+    let
+        spiel1 =
+            "Hello! I developed this project to learn more about the Elm programming language. To view its source, or run the project locally, head over to: "
+
+        spiel2 =
+            "To use the project, paste a url from a Medium article into the search bar. For example: https://medium.com/the-starbucks-collection/coffee-and-wine-ed058b0dc6ed#.1lhz7h3uo"
+    in
+        if isEmpty model.title then
+            div [ class "description" ]
+                [ text spiel1
+                , a [ class "github-link", href "https://github.com/willdeuschle/twig" ] [ text "https://github.com/willdeuschle/twig" ]
+                , div [ class "sub-description" ]
+                    [ text spiel2
+                    ]
+                ]
+        else
+            div [] []
+
+
 view : Model -> Html Msg
 view model =
     div [ class "top-level" ]
@@ -88,6 +110,7 @@ view model =
             , div [ class "article-container" ]
                 [ h2 []
                     [ text model.title ]
+                , initialView model
                 , br [] []
                 , div [ class "simplified-text" ]
                     [ text model.simplifiedText ]

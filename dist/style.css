@@ -35,6 +35,23 @@ body {
     height: 75vh;
     overflow: auto;
 }
+.description {
+    margin-left: 100px;
+    margin-right: 100px;
+    font-size: 18px;
+}
+.github-link {
+    margin-top: 10px;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 20px;
+}
+.sub-description {
+    margin-top: 10px;
+}
+.article-link {
+    font-size: 18px;
+}
 .to-simplify {
     width: 450px;
     height: 36px;
