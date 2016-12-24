@@ -14,14 +14,16 @@
     app.ports.getArticle.subscribe(function(url) {
       console.log("Getting url: ", url);
       $.ajax({
-        type: 'GET',
-        url: ('http://localhost:8000?' + url),
+        type: 'POST',
+        url: "https://s50v8ee483.execute-api.us-west-2.amazonaws.com/beta/elmMedium",
+        data: {"url": url},
         contentType: 'application/json',
         xhrFields: {withCredentials: false},
+        headers: {"X-Api-Key": "KE441MlQnO26WPnCo9V0W6itMhLdcvyK5LU2dPbw"},
         success: function(response) {
           console.log("Success", response);
-          var title = (response.title || "Sorry");
-          var article = (response.article || "This article is currently non-functional.");
+          var title = (response[0] || "Sorry");
+          var article = (response[1] || "This article is currently non-functional.");
           app.ports.articleReceived.send({title: title, article: article});
         },
         error: function(err) {
@@ -34,3 +36,22 @@
 </body>
 </html>
 <!--url: "http://api.icndb.com/jokes/random",-->
+    <!--app.ports.getArticle.subscribe(function(url) {-->
+      <!--console.log("Getting url: ", url);-->
+      <!--$.ajax({-->
+        <!--type: 'GET',-->
+        <!--url: ('http://localhost:8000?' + url),-->
+        <!--contentType: 'application/json',-->
+        <!--xhrFields: {withCredentials: false},-->
+        <!--success: function(response) {-->
+          <!--console.log("Success", response);-->
+          <!--var title = (response.title || "Sorry");-->
+          <!--var article = (response.article || "This article is currently non-functional.");-->
+          <!--app.ports.articleReceived.send({title: title, article: article});-->
+        <!--},-->
+        <!--error: function(err) {-->
+          <!--console.log("Error", err);-->
+          <!--app.ports.articleStatus.send(false);-->
+        <!--},-->
+      <!--});-->
+    <!--});-->
