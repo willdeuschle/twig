@@ -14,14 +14,14 @@
     app.ports.getArticle.subscribe(function(url) {
       console.log("Getting url: ", url);
       $.ajax({
-        type: 'GET',
-        url: ('http://localhost:8000?' + url),
-        contentType: 'application/json',
-        xhrFields: {withCredentials: false},
+        type: 'POST',
+        url: "https://tfj12399fg.execute-api.us-west-2.amazonaws.com/beta/elmMedium",
+        data: JSON.stringify({"url": url}),
+        headers: {"X-Api-Key": "KE441MlQnO26WPnCo9V0W6itMhLdcvyK5LU2dPbw"},
         success: function(response) {
           console.log("Success", response);
-          var title = (response.title || "Sorry");
-          var article = (response.article || "This article is currently non-functional.");
+          var title = (response[0] || "Sorry");
+          var article = (response[1] || "This article is currently non-functional.");
           app.ports.articleReceived.send({title: title, article: article});
         },
         error: function(err) {
