@@ -1,0 +1,101 @@
+body {
+    background-color: #fafafa;
+}
+.top-level {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.main-container {
+    top: 100px;
+    left: 0;
+    right: 0;
+    position: absolute;
+    margin-bottom: 20px;
+}
+.url-container {
+    text-align: center;
+}
+.article-container > h2 {
+    text-align: center;
+    margin: 5px 0px 5px 0px;
+}
+.article-container > .simplified-text {
+    margin-left: 30px;
+    margin-right: 30px;
+    width: 40%;
+    float: left;
+}
+.article-container > .article-text {
+    margin-left: 30px;
+    margin-right: 30px;
+    width: 40%;
+    float: right;
+    height: 75vh;
+    overflow: auto;
+}
+.description {
+    margin-left: 100px;
+    margin-right: 100px;
+    font-size: 18px;
+}
+.github-link {
+    margin-top: 10px;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 20px;
+}
+.sub-description {
+    margin-top: 10px;
+}
+.article-link {
+    font-size: 18px;
+}
+.to-simplify {
+    width: 450px;
+    height: 36px;
+    border-radius: 4px 0px 0px 4px;
+    border: 1px solid lightsteelblue;
+    border-right: 0px;
+    padding-left: 5px;
+    font-size: 20px
+}
+.to-simplify:focus {
+    outline: none;
+}
+.simplify-button {
+    height: 40px;
+    font-size: 20px;
+    border-radius: 0px 4px 4px 0px;
+    border: 1px solid lightsteelblue;
+    font-weight: 200;
+    background-color: lightsteelblue;
+}
+.simplify-button:hover {
+    cursor: pointer;
+}
+.simplify-button:focus {
+    outline: none;
+}
+.header-bar {
+    height: 90px;
+    background-color: darkslategray;
+    left: 0;
+    right: 0;
+    top: 0;
+    position: absolute;
+    text-align: center;
+    color: #00FF00;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.header-bar > h1 {
+    font-weight: 100 !important;
+    font-style: italic;
+}
+.button-container {
+    text-align: center;
+}
